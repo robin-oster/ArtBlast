@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "cloudflare.r2.bucket",
+    "type": "java.lang.String",
+    "description": "A description for 'cloudflare.r2.bucket'"
+  },
+  {
+    "name": "cloudflare.r2.endpoint",
+    "type": "java.lang.String",
+    "description": "A description for 'cloudflare.r2.endpoint'"
+  },
+    {
+    "name": "cloudflare.r2.accessKey",
+    "type": "java.lang.String",
+    "description": "A description for 'cloudflare.r2.accessKey'"
+  },
+    {
+    "name": "cloudflare.r2.secretKey",
+    "type": "java.lang.String",
+    "description": "A description for 'cloudflare.r2.secretKey'"
+  }
+]}
