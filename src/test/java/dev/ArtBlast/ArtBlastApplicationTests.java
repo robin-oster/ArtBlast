@@ -17,7 +17,7 @@ class ArtBlastApplicationTests {
 
 	@Test
 	void createNewPost(){
-		Post post = new Post(null, "test", true, "a");
+		Post post = new Post(null, "test", true, "a", "a");
 		ResponseEntity<Void> response = restTemplate
 			.withBasicAuth("roster", "abc123")
 			.postForEntity("/posts", post, Void.class);

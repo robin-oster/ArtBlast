@@ -20,9 +20,10 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(request -> request
             .requestMatchers("/posts/**")
-            .hasRole("POST-AUTHOR"))
+            .hasRole("USER"))
             .httpBasic(Customizer.withDefaults())
-            .csrf(csrf -> csrf.disable());
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.disable());
 
         return http.build();
     }
@@ -38,9 +39,22 @@ public class SecurityConfig {
         UserDetails robin = users
             .username("roster")
             .password(passwordEncoder.encode("abc123"))
-            .roles("POST-AUTHOR")
+            .roles("USER")
             .build();
 
             return new InMemoryUserDetailsManager(robin);
+    }
+
+    @Bean
+    UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+        User.UserBuilder users = User.builder();
+        UserDetails userDetails = users
+            .username("root")
+            .password(passwordEncoder.encode("root"))
+            .roles("USER")
+            .build();
+
+            return new InMemoryUserDetailsManager(userDetails);
+            
     }
 }
