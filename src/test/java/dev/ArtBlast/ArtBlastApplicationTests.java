@@ -20,7 +20,7 @@ class ArtBlastApplicationTests {
 		Post post = new Post(null, "test", true, "a", "a");
 		ResponseEntity<Void> response = restTemplate
 			.withBasicAuth("roster", "abc123")
-			.postForEntity("/posts", post, Void.class);
+			.postForEntity("/posts/createNew", post, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 	}
 

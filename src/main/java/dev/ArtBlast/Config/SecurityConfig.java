@@ -1,4 +1,4 @@
-package dev.ArtBlast;
+package dev.ArtBlast.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +34,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    UserDetailsService testOnlyUsers(PasswordEncoder passwordEncoder){
+    UserDetailsService userDetailsService(PasswordEncoder passwordEncoder){
         User.UserBuilder users = User.builder();
         UserDetails robin = users
             .username("roster")
@@ -43,18 +43,5 @@ public class SecurityConfig {
             .build();
 
             return new InMemoryUserDetailsManager(robin);
-    }
-
-    @Bean
-    UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        User.UserBuilder users = User.builder();
-        UserDetails userDetails = users
-            .username("root")
-            .password(passwordEncoder.encode("root"))
-            .roles("USER")
-            .build();
-
-            return new InMemoryUserDetailsManager(userDetails);
-            
     }
 }

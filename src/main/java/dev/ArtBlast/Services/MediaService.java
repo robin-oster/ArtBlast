@@ -1,4 +1,4 @@
-package dev.ArtBlast;
+package dev.ArtBlast.Services;
 
 import java.io.IOException;
 import java.util.Optional;
