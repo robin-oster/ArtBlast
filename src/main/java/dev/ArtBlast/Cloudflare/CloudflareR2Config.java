@@ -1,4 +1,4 @@
-package dev.ArtBlast;
+package dev.ArtBlast.Cloudflare;
 
 import java.net.URI;
 

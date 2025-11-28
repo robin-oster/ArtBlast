@@ -1,11 +1,14 @@
 package dev.ArtBlast.Services;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
 import dev.ArtBlast.Post;
-import dev.ArtBlast.PostRepository;
+import dev.ArtBlast.Repository.PostRepository;
 
+@Service
 public class PostDataService {
 
     private final PostRepository postRepository;
@@ -14,11 +17,11 @@ public class PostDataService {
         this.postRepository = postRepository;
     }
     
-    Post findByIdAndAuthor(Long id, String author){
+    public Post findByIdAndAuthor(Long id, String author){
         return postRepository.findByIdAndAuthor(id, author);
     }
 
-    Page<Post> findByAuthor(String author, PageRequest pageRequest){
+    public Page<Post> findByAuthor(String author, PageRequest pageRequest){
         return postRepository.findByAuthor(author, pageRequest);
     }
 

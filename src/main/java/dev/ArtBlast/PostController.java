@@ -4,9 +4,11 @@ import java.net.URI;
 import java.security.Principal;
 
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import dev.ArtBlast.Services.MediaService;
 import dev.ArtBlast.Services.PostDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
@@ -26,7 +29,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class PostController {
 
+    @Autowired
     private final MediaService mediaService;
+
+    @Autowired
     private final PostDataService postDataService;
 
     @PostMapping("/createNew")
@@ -56,5 +62,16 @@ public class PostController {
 
         return ResponseEntity.created(locationOfPost).build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> getMethodName(@PathVariable Long id, Principal principal) {
+        Post post = postDataService.findByIdAndAuthor(id, principal.getName());
+        if (post != null){
+            return ResponseEntity.ok(post);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
     
 }
