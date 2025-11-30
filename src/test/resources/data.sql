@@ -1,0 +1,1 @@
+INSERT INTO posts(ID, AUTHOR, HAS_MEDIA, MEDIA_LINK, TEXT_CONTENT) VALUES (99, 'roster', false, NULL, 'abcdefg');

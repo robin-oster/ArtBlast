@@ -36,7 +36,7 @@ public class PostController {
     private final PostDataService postDataService;
 
     @PostMapping("/createNew")
-    private ResponseEntity<Void> createPost(@RequestBody Post postRequest, @RequestParam(name="file", required=false) MultipartFile file,
+    private ResponseEntity<Void> createPost(@RequestBody Post postRequest, String media_key,
         UriComponentsBuilder ucb, Principal principal){
         
         Post newPostWithAuthor;
@@ -44,12 +44,7 @@ public class PostController {
 
         // upload image if post has media
         if(postRequest.has_media() == true){
-            try {
-                imagePath = mediaService.uploadFile(file);
-                newPostWithAuthor = new Post(null, principal.getName(), postRequest.has_media(), imagePath, postRequest.text_content());
-            } catch (FileUploadException e){
-                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-            }
+            newPostWithAuthor = new Post(null, principal.getName(), postRequest.has_media(), media_key, postRequest.text_content());
         } else {
             newPostWithAuthor = new Post(null, principal.getName(), postRequest.has_media(), null, postRequest.text_content());
         }
@@ -64,7 +59,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getMethodName(@PathVariable Long id, Principal principal) {
+    public ResponseEntity<Post> retrievePost(@PathVariable Long id, Principal principal) {
         Post post = postDataService.findByIdAndAuthor(id, principal.getName());
         if (post != null){
             return ResponseEntity.ok(post);
@@ -72,6 +67,16 @@ public class PostController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
+    @PostMapping("/uploadMedia")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        String key = "k";
+        try{
+            key = mediaService.uploadFile(file);
+        } catch (FileUploadException e) {
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(key);
+    }
     
 }
