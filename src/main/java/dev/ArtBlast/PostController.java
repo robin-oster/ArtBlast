@@ -2,9 +2,14 @@ package dev.ArtBlast;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
 
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -43,24 +48,24 @@ public class PostController {
         String imagePath;
 
         // upload image if post has media
-        if(postRequest.has_media() == true){
-            newPostWithAuthor = new Post(null, principal.getName(), postRequest.has_media(), media_key, postRequest.text_content());
+        if(postRequest.getHasMedia() == true){
+            newPostWithAuthor = new Post(null, principal.getName(), postRequest.getHasMedia(), media_key, postRequest.getTextContent(), postRequest.getDateTime());
         } else {
-            newPostWithAuthor = new Post(null, principal.getName(), postRequest.has_media(), null, postRequest.text_content());
+            newPostWithAuthor = new Post(null, principal.getName(), postRequest.getHasMedia(), null, postRequest.getTextContent(), postRequest.getDateTime());
         }
 
         Post savedPost = postDataService.save(newPostWithAuthor);
         URI locationOfPost = ucb
             .path("posts/{id}")
-            .buildAndExpand(savedPost.id())
+            .buildAndExpand(savedPost.getId())
             .toUri();
 
         return ResponseEntity.created(locationOfPost).build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Post> retrievePost(@PathVariable Long id, Principal principal) {
-        Post post = postDataService.findByIdAndAuthor(id, principal.getName());
+    @GetMapping("/{requestedId}")
+    private ResponseEntity<Post> retrievePost(@PathVariable Long requestedId, Principal principal) {
+        Post post = postDataService.findByIdAndAuthor(requestedId, principal.getName());
         if (post != null){
             return ResponseEntity.ok(post);
         } else {
@@ -68,8 +73,18 @@ public class PostController {
         }
     }
 
+    @GetMapping("/user")
+    private ResponseEntity<List<Post>> retrieveAllUserPosts(Pageable pageable, Principal principal){
+        Page<Post> page = postDataService.findByAuthor(principal.getName(), 
+            PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                pageable.getSortOr(Sort.by(Sort.Direction.ASC, "date_time"))));
+        return ResponseEntity.ok(page.getContent());
+    }
+
     @PostMapping("/uploadMedia")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+    private ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         String key = "k";
         try{
             key = mediaService.uploadFile(file);

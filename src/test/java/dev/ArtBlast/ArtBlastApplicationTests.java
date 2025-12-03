@@ -49,7 +49,7 @@ class ArtBlastApplicationTests {
 	@Test
 	@DirtiesContext
 	void shouldCreateNewPost(){
-		Post post = new Post(null, "roster", true, "a", "a");
+		Post post = new Post(null, "roster", true, "a", "a", "a");
 		ResponseEntity<Void> response = restTemplate
 			.withBasicAuth("roster", "abc123")
 			.postForEntity("/posts/createNew", post, Void.class);

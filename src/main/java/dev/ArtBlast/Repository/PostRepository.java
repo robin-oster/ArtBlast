@@ -7,6 +7,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import dev.ArtBlast.Post;
+import java.util.List;
+
 
 public interface PostRepository extends CrudRepository<Post, Long>,
     PagingAndSortingRepository<Post, Long> {
