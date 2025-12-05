@@ -1,5 +1,6 @@
 package dev.ArtBlast.Services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +12,7 @@ import dev.ArtBlast.Repository.PostRepository;
 @Service
 public class PostDataService {
 
+    @Autowired
     private final PostRepository postRepository;
 
     PostDataService(PostRepository postRepository){
@@ -18,6 +20,7 @@ public class PostDataService {
     }
     
     public Post findByIdAndAuthor(Long id, String author){
+        System.out.println(postRepository);
         return postRepository.findByIdAndAuthor(id, author);
     }
 

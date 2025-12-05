@@ -6,22 +6,26 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value.Bool;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "POSTS")
 @Getter
 @Setter
 public class Post {
 
-    Post(Long id, String author, Boolean hasMedia, String mediaLink, String textContent, String date_time){
+    public Post(){}
+
+    public Post(Long id, String author, Boolean hasMedia, String mediaLink, String textContent, String dateTime){
         this.id = id;
         this.author = author;
         this.hasMedia = hasMedia;
         this.mediaLink = mediaLink;
         this.textContent = textContent;
-        this.dateTime = date_time;
+        this.dateTime = dateTime;
     }
 
     @Id

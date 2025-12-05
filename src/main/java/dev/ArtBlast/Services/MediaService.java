@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @RequiredArgsConstructor
 public class MediaService {
     
+    @Autowired
     private final S3Client s3Client;
 
     @Value("${cloudflare.r2.bucket}")

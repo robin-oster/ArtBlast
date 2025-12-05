@@ -23,6 +23,14 @@ class ArtBlastApplicationTests {
 	TestRestTemplate restTemplate;
 
 	@Test
+	void shouldRetrieveAllPostsForUser(){
+		ResponseEntity<String> response = restTemplate
+			.withBasicAuth("roster", "abc123")
+			.getForEntity("/posts/user", String.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+	}
+
+	@Test
 	void shouldRetrieveSinglePost(){
 		ResponseEntity<String> response = restTemplate
 			.withBasicAuth("roster", "abc123")

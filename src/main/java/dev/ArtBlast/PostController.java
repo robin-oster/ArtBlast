@@ -56,7 +56,7 @@ public class PostController {
 
         Post savedPost = postDataService.save(newPostWithAuthor);
         URI locationOfPost = ucb
-            .path("posts/{id}")
+            .path("/posts/{id}")
             .buildAndExpand(savedPost.getId())
             .toUri();
 
@@ -66,6 +66,7 @@ public class PostController {
     @GetMapping("/{requestedId}")
     private ResponseEntity<Post> retrievePost(@PathVariable Long requestedId, Principal principal) {
         Post post = postDataService.findByIdAndAuthor(requestedId, principal.getName());
+        System.out.println("POST: " + principal.getName());
         if (post != null){
             return ResponseEntity.ok(post);
         } else {
@@ -75,7 +76,7 @@ public class PostController {
 
     @GetMapping("/user")
     private ResponseEntity<List<Post>> retrieveAllUserPosts(Pageable pageable, Principal principal){
-        Page<Post> page = postDataService.findByAuthor(principal.getName(), 
+        Page<Post> page = postDataService.findByAuthor(principal.getName(),
             PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import dev.ArtBlast.Post;
 import java.util.List;
 
-
+@Repository
 public interface PostRepository extends CrudRepository<Post, Long>,
     PagingAndSortingRepository<Post, Long> {
 
