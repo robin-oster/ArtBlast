@@ -25,6 +25,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import dev.ArtBlast.Services.MediaService;
 import dev.ArtBlast.Services.PostDataService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -82,6 +84,15 @@ public class PostController {
                 pageable.getPageSize(),
                 pageable.getSortOr(Sort.by(Sort.Direction.ASC, "dateTime"))));
         return ResponseEntity.ok(page.getContent());
+    }
+
+    @DeleteMapping("/{requestedId}")
+    private ResponseEntity<Void> deletePost(@PathVariable Long requestedId, Principal principal){
+        if(!postDataService.existsByIdAndAuthor(requestedId, principal.getName())){
+            return ResponseEntity.notFound().build();
+        }
+        postDataService.deleteById(requestedId);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/uploadMedia")

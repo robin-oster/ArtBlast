@@ -15,4 +15,5 @@ public interface PostRepository extends CrudRepository<Post, Long>,
 
         Post findByIdAndAuthor(Long id, String author);
         Page<Post> findByAuthor(String author, PageRequest pageRequest);
+        Boolean existsByIdAndAuthor(Long id, String author);
 }

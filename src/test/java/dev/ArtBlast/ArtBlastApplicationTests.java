@@ -4,9 +4,11 @@ package dev.ArtBlast;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.web.client.RestTemplate;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -44,13 +46,13 @@ class ArtBlastApplicationTests {
 		String author = documentContext.read("$.author");
 		assertThat(author).isEqualTo("roster");
 
-		Boolean has_media = documentContext.read("$.has_media");
+		Boolean has_media = documentContext.read("$.hasMedia");
 		assertThat(has_media).isEqualTo(false);
 
-		String media_link = documentContext.read("$.media_link");
+		String media_link = documentContext.read("$.mediaLink");
 		assertThat(media_link).isEqualTo(null);
 
-		String text_content = documentContext.read("$.text_content");
+		String text_content = documentContext.read("$.textContent");
 		assertThat(text_content).isEqualTo("abcdefg");
 	}
 
@@ -64,7 +66,14 @@ class ArtBlastApplicationTests {
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 	}
 
-
+	@Test
+	@DirtiesContext
+	void shouldAllowUserToDeleteOwnPost(){
+		ResponseEntity<Void> response = restTemplate
+			.withBasicAuth("roster", "abc123")
+			.exchange("/posts/100", HttpMethod.DELETE, null, Void.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+	}
 
 	@Test
 	void contextLoads() {

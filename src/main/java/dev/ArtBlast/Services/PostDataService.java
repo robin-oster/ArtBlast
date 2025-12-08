@@ -28,6 +28,20 @@ public class PostDataService {
         return postRepository.findByAuthor(author, pageRequest);
     }
 
+    public Boolean existsById(Long id){
+        return postRepository.existsById(id);
+    }
+
+    public Boolean existsByIdAndAuthor(Long id, String author){
+        return postRepository.existsByIdAndAuthor(id, author);
+    }
+
+    public void deleteById(Long id){
+        if(postRepository.existsById(id)){
+            postRepository.deleteById(id);
+        }
+    }
+
     public Post save(Post post){
         if(post != null){
             return postRepository.save(post);
