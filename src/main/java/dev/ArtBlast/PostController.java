@@ -80,7 +80,7 @@ public class PostController {
             PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
-                pageable.getSortOr(Sort.by(Sort.Direction.ASC, "date_time"))));
+                pageable.getSortOr(Sort.by(Sort.Direction.ASC, "dateTime"))));
         return ResponseEntity.ok(page.getContent());
     }
 
