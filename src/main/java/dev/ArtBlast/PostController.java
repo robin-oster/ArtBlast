@@ -46,17 +46,17 @@ public class PostController {
     private ResponseEntity<Void> createPost(@RequestBody Post postRequest, String media_key,
         UriComponentsBuilder ucb, Principal principal){
         
-        Post newPostWithAuthor;
+        Post newPostWithUsername;
         String imagePath;
 
         // upload image if post has media
         if(postRequest.getHasMedia() == true){
-            newPostWithAuthor = new Post(null, principal.getName(), postRequest.getHasMedia(), media_key, postRequest.getTextContent(), postRequest.getDateTime());
+            newPostWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), media_key, postRequest.getTextContent(), postRequest.getDateTime());
         } else {
-            newPostWithAuthor = new Post(null, principal.getName(), postRequest.getHasMedia(), null, postRequest.getTextContent(), postRequest.getDateTime());
+            newPostWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), null, postRequest.getTextContent(), postRequest.getDateTime());
         }
 
-        Post savedPost = postDataService.save(newPostWithAuthor);
+        Post savedPost = postDataService.save(newPostWithUsername);
         URI locationOfPost = ucb
             .path("/posts/{id}")
             .buildAndExpand(savedPost.getId())
@@ -67,7 +67,7 @@ public class PostController {
 
     @GetMapping("/{requestedId}")
     private ResponseEntity<Post> retrievePost(@PathVariable Long requestedId, Principal principal) {
-        Post post = postDataService.findByIdAndAuthor(requestedId, principal.getName());
+        Post post = postDataService.findByIdAndUsername(requestedId, principal.getName());
         System.out.println("POST: " + principal.getName());
         if (post != null){
             return ResponseEntity.ok(post);
@@ -78,7 +78,7 @@ public class PostController {
 
     @GetMapping("/user")
     private ResponseEntity<List<Post>> retrieveAllUserPosts(Pageable pageable, Principal principal){
-        Page<Post> page = postDataService.findByAuthor(principal.getName(),
+        Page<Post> page = postDataService.findByUsername(principal.getName(),
             PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
@@ -88,7 +88,7 @@ public class PostController {
 
     @DeleteMapping("/{requestedId}")
     private ResponseEntity<Void> deletePost(@PathVariable Long requestedId, Principal principal){
-        if(!postDataService.existsByIdAndAuthor(requestedId, principal.getName())){
+        if(!postDataService.existsByIdAndUsername(requestedId, principal.getName())){
             return ResponseEntity.notFound().build();
         }
         postDataService.deleteById(requestedId);

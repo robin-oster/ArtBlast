@@ -1,5 +1,7 @@
 package dev.ArtBlast;
 
+import java.sql.Timestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,9 +21,9 @@ public class Post {
 
     public Post(){}
 
-    public Post(Long id, String author, Boolean hasMedia, String mediaLink, String textContent, String dateTime){
+    public Post(Long id, String username, Boolean hasMedia, String mediaLink, String textContent, Timestamp dateTime){
         this.id = id;
-        this.author = author;
+        this.username = username;
         this.hasMedia = hasMedia;
         this.mediaLink = mediaLink;
         this.textContent = textContent;
@@ -33,8 +35,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long id;
     
-    @Column(name = "author")
-    private String author;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "has_media")
     private Boolean hasMedia;
@@ -46,5 +48,5 @@ public class Post {
     private String textContent;
     
     @Column(name = "date_time")
-    private String dateTime;
+    private Timestamp dateTime;
 }

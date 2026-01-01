@@ -19,21 +19,21 @@ public class PostDataService {
         this.postRepository = postRepository;
     }
     
-    public Post findByIdAndAuthor(Long id, String author){
+    public Post findByIdAndUsername(Long id, String username){
         System.out.println(postRepository);
-        return postRepository.findByIdAndAuthor(id, author);
+        return postRepository.findByIdAndUsername(id, username);
     }
 
-    public Page<Post> findByAuthor(String author, PageRequest pageRequest){
-        return postRepository.findByAuthor(author, pageRequest);
+    public Page<Post> findByUsername(String username, PageRequest pageRequest){
+        return postRepository.findByUsername(username, pageRequest);
     }
 
     public Boolean existsById(Long id){
         return postRepository.existsById(id);
     }
 
-    public Boolean existsByIdAndAuthor(Long id, String author){
-        return postRepository.existsByIdAndAuthor(id, author);
+    public Boolean existsByIdAndUsername(Long id, String username){
+        return postRepository.existsByIdAndUsername(id, username);
     }
 
     public void deleteById(Long id){

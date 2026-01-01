@@ -13,7 +13,7 @@ import java.util.List;
 public interface PostRepository extends CrudRepository<Post, Long>,
     PagingAndSortingRepository<Post, Long> {
 
-        Post findByIdAndAuthor(Long id, String author);
-        Page<Post> findByAuthor(String author, PageRequest pageRequest);
-        Boolean existsByIdAndAuthor(Long id, String author);
+        Post findByIdAndUsername(Long id, String username);
+        Page<Post> findByUsername(String username, PageRequest pageRequest);
+        Boolean existsByIdAndUsername(Long id, String username);
 }

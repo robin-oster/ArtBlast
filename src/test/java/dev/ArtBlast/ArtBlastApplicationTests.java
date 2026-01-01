@@ -18,6 +18,13 @@ import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ArtBlastApplicationTests {
 
@@ -43,8 +50,8 @@ class ArtBlastApplicationTests {
 		int id = documentContext.read("$.id");
 		assertThat(id).isEqualTo(99);
 
-		String author = documentContext.read("$.author");
-		assertThat(author).isEqualTo("roster");
+		String username = documentContext.read("$.username");
+		assertThat(username).isEqualTo("roster");
 
 		Boolean has_media = documentContext.read("$.hasMedia");
 		assertThat(has_media).isEqualTo(false);
@@ -58,8 +65,9 @@ class ArtBlastApplicationTests {
 
 	@Test
 	@DirtiesContext
-	void shouldCreateNewPost(){
-		Post post = new Post(null, "roster", true, "a", "a", "a");
+	void shouldCreateNewPost() throws ParseException{
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		Post post = new Post(null, "roster", true, "a", "a", timestamp);
 		ResponseEntity<Void> response = restTemplate
 			.withBasicAuth("roster", "abc123")
 			.postForEntity("/posts/createNew", post, Void.class);

@@ -25,6 +25,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(request -> request
             .requestMatchers("/posts/**")
             .hasRole("USER"))
+            .formLogin(Customizer.withDefaults())
             .httpBasic(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.disable());
