@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import dev.ArtBlast.Entities.Post;
 import dev.ArtBlast.Services.MediaService;
 import dev.ArtBlast.Services.PostDataService;
 import lombok.RequiredArgsConstructor;

@@ -6,7 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import dev.ArtBlast.Post;
+import dev.ArtBlast.Entities.Post;
+
 import java.util.List;
 
 @Repository

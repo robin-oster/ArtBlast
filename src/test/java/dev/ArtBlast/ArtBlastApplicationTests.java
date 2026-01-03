@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
+import dev.ArtBlast.Entities.Post;
+
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 

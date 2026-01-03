@@ -1,4 +1,4 @@
-package dev.ArtBlast;
+package dev.ArtBlast.Entities;
 
 import java.sql.Timestamp;
 
