@@ -8,9 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import dev.ArtBlast.Entities.Authorities;
 import dev.ArtBlast.Entities.User;
-import dev.ArtBlast.Repository.AuthorityRepository;
 import dev.ArtBlast.Repository.UserRepository;
 
 @Service
@@ -18,17 +16,23 @@ public class MyUserDetailsService implements UserDetailsService{
     
     @Autowired
     private UserRepository userRepository;
-    private AuthorityRepository authorityRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username){
         User user = userRepository.findByUsername(username);
-        List<Authorities> authorities = authorityRepository.findAllByUsername(username);
         if (user == null){
             throw new UsernameNotFoundException(username);
         }
-        return new MyUserPrincipal(user, authorities);
+        return new MyUserPrincipal(user);
     }
+
+    public User save(User user){
+        if (user != null){
+            return userRepository.save(user);
+        }
+        return null;
+    }
+    
 }
 
 

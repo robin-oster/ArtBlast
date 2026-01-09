@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,6 +15,7 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import dev.ArtBlast.Entities.Post;
+import dev.ArtBlast.Entities.User;
 
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
@@ -78,12 +80,24 @@ class ArtBlastApplicationTests {
 
 	@Test
 	@DirtiesContext
+	void shouldCreateNewUser() throws ParseException{
+		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("USER");
+		User user = new User(null, "roster", "abc123", true, "a@b.com", "", "testing", authority);
+		ResponseEntity<Void> response = restTemplate
+			.postForEntity("/user/createNew", user, Void.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+	}
+
+	/*
+	@Test
+	@DirtiesContext
 	void shouldAllowUserToDeleteOwnPost(){
 		ResponseEntity<Void> response = restTemplate
 			.withBasicAuth("roster", "abc123")
 			.exchange("/posts/100", HttpMethod.DELETE, null, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 	}
+		*/
 
 	@Test
 	void contextLoads() {

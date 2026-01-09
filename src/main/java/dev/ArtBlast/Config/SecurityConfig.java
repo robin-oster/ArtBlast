@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import dev.ArtBlast.Services.MyUserDetailsService;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -23,7 +25,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
             .authorizeHttpRequests(request -> request
-            .requestMatchers("/posts/**")
+            .requestMatchers("/posts/**", "/user/**")
             .hasRole("USER"))
             .formLogin(Customizer.withDefaults())
             .httpBasic(Customizer.withDefaults())
@@ -39,15 +41,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    UserDetailsService userDetailsService(PasswordEncoder passwordEncoder){
-        User.UserBuilder users = User.builder();
-        UserDetails robin = users
-            .username("roster")
-            .password(passwordEncoder.encode("abc123"))
-            .roles("USER")
-            .build();
-
-            return new InMemoryUserDetailsManager(robin);
+    MyUserDetailsService myUserDetailsService(){
+        return new MyUserDetailsService();
     }
 
     @Bean

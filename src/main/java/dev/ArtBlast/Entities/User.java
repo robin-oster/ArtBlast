@@ -1,5 +1,9 @@
 package dev.ArtBlast.Entities;
 
+import java.util.List;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +23,7 @@ public class User {
 
     public User(){}
 
-    public User(Long id, String username, String password, Boolean enabled, String email, String avatar, String bio){
+    public User(Long id, String username, String password, Boolean enabled, String email, String avatar, String bio, SimpleGrantedAuthority authority){
         this.id = id;
         this.username = username;
         this.password = password;
@@ -27,6 +31,7 @@ public class User {
         this.email = email;
         this.avatar = avatar;
         this.bio = bio;
+        this.authority = authority;
     }
 
     @Id
@@ -51,4 +56,7 @@ public class User {
     
     @Column(name = "bio")
     private String bio;
+
+    @Column(name = "authority")
+    private SimpleGrantedAuthority authority;
 }

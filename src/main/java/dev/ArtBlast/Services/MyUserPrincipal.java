@@ -8,16 +8,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import dev.ArtBlast.Entities.Authorities;
 import dev.ArtBlast.Entities.User;
 
 public class MyUserPrincipal implements UserDetails{
     private User user;
-    private List<Authorities> authorities;
 
-    public MyUserPrincipal(User user, List<Authorities> authorities){
+    public MyUserPrincipal(User user){
         this.user = user;
-        this.authorities = authorities;
     }
 
     public Long getId(){
@@ -50,9 +47,7 @@ public class MyUserPrincipal implements UserDetails{
 
     public Collection<SimpleGrantedAuthority> getAuthorities(){
         List<SimpleGrantedAuthority> updatedAuthorities = new ArrayList<SimpleGrantedAuthority>();
-        for(Authorities i : authorities){
-            updatedAuthorities.add(new SimpleGrantedAuthority(i.getAuthority()));
-        }
+        updatedAuthorities.add(new SimpleGrantedAuthority(user.getAuthority().toString()));
         Collection<SimpleGrantedAuthority> newAuthorities = updatedAuthorities;
         return newAuthorities;
     }
