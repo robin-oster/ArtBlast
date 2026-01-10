@@ -44,13 +44,14 @@ public class UserController {
     }
     
     @PostMapping("/newUser")
-    public ResponseEntity<UserDetails> createUser(@RequestBody MyUserPrincipal request, UriComponentsBuilder ucb) {
+    public ResponseEntity<UserDetails> createUser(@RequestBody User request, UriComponentsBuilder ucb) {
         
         String cryptPassword = passwordEncoder.encode(request.getPassword());
 
-        User newUser = new User(null, request.getUsername(), cryptPassword, request.isEnabled(), 
-            request.getEmail(), request.getAvatar(), request.getBio(), request.getAuthorities().iterator().next());
+        User newUser = new User(null, request.getUsername(), cryptPassword, request.getEnabled(), 
+            request.getEmail(), request.getAvatar(), request.getBio(), request.getAuthority());
         
+        System.out.println("SAVED USER: " + newUser);
         User savedUser = userDetailsService.save(newUser);
         URI savedLocation = ucb
             .path("/user/{username}")

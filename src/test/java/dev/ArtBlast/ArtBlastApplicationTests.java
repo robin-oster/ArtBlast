@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,6 +35,7 @@ class ArtBlastApplicationTests {
 
 	@Autowired
 	TestRestTemplate restTemplate;
+	PasswordEncoder passwordEncoder;
 
 	@Test
 	void shouldRetrieveAllPostsForUser(){
@@ -51,6 +53,7 @@ class ArtBlastApplicationTests {
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
 		DocumentContext documentContext = JsonPath.parse(response.getBody());
+		System.out.println("BODY: " + response.getBody() + " !!!!!!!!!!!!!!!!!!!!");
 		int id = documentContext.read("$.id");
 		assertThat(id).isEqualTo(99);
 
@@ -81,8 +84,7 @@ class ArtBlastApplicationTests {
 	@Test
 	@DirtiesContext
 	void shouldCreateNewUser() throws ParseException{
-		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("USER");
-		User user = new User(null, "roster", "abc123", true, "a@b.com", "", "testing", authority);
+		User user = new User(null, "roster", "abc123", true, "a@b.com", "", "testing", "USER");
 		ResponseEntity<Void> response = restTemplate
 			.postForEntity("/user/createNew", user, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);

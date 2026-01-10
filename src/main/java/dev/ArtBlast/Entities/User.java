@@ -23,7 +23,7 @@ public class User {
 
     public User(){}
 
-    public User(Long id, String username, String password, Boolean enabled, String email, String avatar, String bio, SimpleGrantedAuthority authority){
+    public User(Long id, String username, String password, Boolean enabled, String email, String avatar, String bio, String authority){
         this.id = id;
         this.username = username;
         this.password = password;
@@ -32,6 +32,17 @@ public class User {
         this.avatar = avatar;
         this.bio = bio;
         this.authority = authority;
+    }
+
+    public User(User user){
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.enabled = user.getEnabled();
+        this.email = user.getEmail();
+        this.avatar = user.getAvatar();
+        this.bio = user.getBio();
+        this.authority = user.getAuthority();
     }
 
     @Id
@@ -58,5 +69,5 @@ public class User {
     private String bio;
 
     @Column(name = "authority")
-    private SimpleGrantedAuthority authority;
+    private String authority;
 }
