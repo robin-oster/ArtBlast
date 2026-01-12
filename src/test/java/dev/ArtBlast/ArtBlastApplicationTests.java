@@ -53,7 +53,6 @@ class ArtBlastApplicationTests {
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
 		DocumentContext documentContext = JsonPath.parse(response.getBody());
-		System.out.println("BODY: " + response.getBody() + " !!!!!!!!!!!!!!!!!!!!");
 		int id = documentContext.read("$.id");
 		assertThat(id).isEqualTo(99);
 
@@ -86,7 +85,7 @@ class ArtBlastApplicationTests {
 	void shouldCreateNewUser() throws ParseException{
 		User user = new User(null, "roster", "abc123", true, "a@b.com", "", "testing", "USER");
 		ResponseEntity<Void> response = restTemplate
-			.postForEntity("/user/createNew", user, Void.class);
+			.postForEntity("/user/newUser", user, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 	}
 

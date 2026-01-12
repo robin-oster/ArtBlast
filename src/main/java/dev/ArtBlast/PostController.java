@@ -96,6 +96,7 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
+    // can be called inside createNew to pass media_key in
     @PostMapping("/uploadMedia")
     private ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         String key = "k";

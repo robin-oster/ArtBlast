@@ -29,12 +29,13 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-            .authorizeHttpRequests(request -> request
-            .requestMatchers("/posts/**", "/user/**")
-            .hasRole("USER"))
             .httpBasic(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.disable());
+            .cors(cors -> cors.disable())
+            .authorizeHttpRequests((request) -> request
+                .requestMatchers("/", "/user/newUser", "/error").permitAll()
+                .anyRequest().authenticated()
+            );
 
         return http.build();
     }
@@ -54,10 +55,5 @@ public class SecurityConfig {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authenticationProvider);
-    }
-
-    @Bean
-    WebSecurityCustomizer ignoringCustomizer(){
-        return (web) -> web.ignoring().requestMatchers("/h2-console/**", "/user/newUser");
     }
 }
