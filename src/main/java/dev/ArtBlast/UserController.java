@@ -5,7 +5,9 @@ import java.security.Principal;
 
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,11 +46,11 @@ public class UserController {
     private final MediaService mediaService;
 
     @GetMapping("/{username}")
-    private ResponseEntity<UserDetails> retrieveUser(@RequestParam String username) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        System.out.println("POST: " + userDetails.getUsername());
-        if(userDetails != null){
-            return ResponseEntity.ok(userDetails);
+    private ResponseEntity<User> retrieveUser(@RequestParam String username, Principal principal) {
+        MyUserPrincipal userDetails = userDetailsService.loadUserByUsername(username);
+        if(userDetails != null && userDetails.isEnabled()){
+            return ResponseEntity.ok(new User(userDetails.getId(), userDetails.getUsername(), null, true,
+            null, userDetails.getAvatar(), userDetails.getBio(), null));
         }
         return ResponseEntity.notFound().build();
     }
@@ -61,38 +63,45 @@ public class UserController {
         User newUser = new User(null, request.getUsername(), cryptPassword, request.getEnabled(), 
             request.getEmail(), request.getAvatar(), request.getBio(), request.getAuthority());
         
-        System.out.println("SAVED USER: " + newUser);
-        User savedUser = userDetailsService.save(newUser);
-        URI savedLocation = ucb
+        
+        try{
+            User savedUser = userDetailsService.save(newUser);
+
+            URI savedLocation = ucb
             .path("/user/{username}")
             .buildAndExpand(savedUser.getUsername())
             .toUri();
 
-        return ResponseEntity.created(savedLocation).build();
+            return ResponseEntity.created(savedLocation).build();
+
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(409).build();
+        }
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<Void> updateUser(@PathVariable String username, @RequestBody User userUpdate) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if(userDetails != null){
+    public ResponseEntity<Void> updateUser(@PathVariable String username, @RequestBody User userUpdate, Principal principal) {
+        MyUserPrincipal userDetails = userDetailsService.loadUserByUsername(principal.getName());
+        String updatedUsername = userDetails.getUsername();
+        String updatedPassword = userDetails.getPassword();
+        String updatedEmail = userDetails.getEmail();
+        String updatedAvatar = userDetails.getAvatar();
+        String updatedBio = userDetails.getBio();
+        
+        if(updatedUsername != userUpdate.getUsername()) updatedUsername = userUpdate.getUsername();
+        if(updatedPassword != passwordEncoder.encode(userUpdate.getPassword())) updatedPassword = passwordEncoder.encode(userUpdate.getPassword());
+        if(updatedEmail != userUpdate.getEmail()) updatedEmail = userUpdate.getEmail();
+        if(updatedAvatar != userUpdate.getAvatar()) updatedAvatar = userUpdate.getAvatar();
+        if(updatedBio != userUpdate.getBio()) updatedBio = userUpdate.getBio();
+
+        if(userDetails != null && userUpdate.getId() == userDetails.getId()){
             //ensure id doesnt change
-            User updatedUser = new User(userDetailsService.getId(username), userUpdate.getUsername(), userUpdate.getPassword(),
-                userUpdate.getEnabled(), userUpdate.getEmail(), userUpdate.getAvatar(), userUpdate.getBio(), userUpdate.getAuthority());
+            User updatedUser = new User(userDetails.getId(), updatedUsername, updatedPassword, true, updatedEmail, updatedAvatar, 
+                updatedBio, userDetails.getAuthorities().toString());
             userDetailsService.save(updatedUser);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/uploadAvatar")
-    public ResponseEntity<String> uploadAvatar(@RequestParam("file") MultipartFile file) {
-                String key = "k";
-        try{
-            key = mediaService.uploadFile(file);
-        } catch (FileUploadException e) {
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(key);
-    }
-    
 }

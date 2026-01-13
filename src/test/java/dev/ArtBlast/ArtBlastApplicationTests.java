@@ -83,7 +83,7 @@ class ArtBlastApplicationTests {
 	@Test
 	@DirtiesContext
 	void shouldCreateNewUser() throws ParseException{
-		User user = new User(null, "roster", "abc123", true, "a@b.com", "", "testing", "USER");
+		User user = new User(null, "roster", "abc123", true, "a@b.com", "", "testing", "ROLE_USER");
 		ResponseEntity<Void> response = restTemplate
 			.postForEntity("/user/newUser", user, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
