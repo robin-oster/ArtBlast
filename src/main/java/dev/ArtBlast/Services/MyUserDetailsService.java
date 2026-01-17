@@ -43,6 +43,14 @@ public class MyUserDetailsService implements UserDetailsService{
         }
         return null;
     }
+
+    public Void deleteById(Long id){
+        if (userRepository.existsById(id)){
+            userRepository.deleteById(id);
+            return null;
+        }
+        return null;
+    }
     
 }
 

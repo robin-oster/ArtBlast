@@ -21,6 +21,8 @@ import dev.ArtBlast.Services.MediaService;
 import dev.ArtBlast.Services.MyUserDetailsService;
 import dev.ArtBlast.Services.MyUserPrincipal;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,6 +104,15 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Void> deleteUser(@PathVariable Long id, Principal principal){
+        if(userDetailsService.getId(principal.getName()) != id){
+            return ResponseEntity.notFound().build();
+        }
+        userDetailsService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

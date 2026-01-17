@@ -21,13 +21,14 @@ public class Post {
 
     public Post(){}
 
-    public Post(Long id, String username, Boolean hasMedia, String mediaLink, String textContent, Timestamp dateTime){
+    public Post(Long id, String username, Boolean hasMedia, String mediaLink, String textContent, Timestamp dateTime, Long parentId){
         this.id = id;
         this.username = username;
         this.hasMedia = hasMedia;
         this.mediaLink = mediaLink;
         this.textContent = textContent;
         this.dateTime = dateTime;
+        this.parentId = parentId;
     }
 
     @Id
@@ -49,4 +50,7 @@ public class Post {
     
     @Column(name = "date_time")
     private Timestamp dateTime;
+
+    @Column(name = "parent_id")
+    private Long parentId;
 }

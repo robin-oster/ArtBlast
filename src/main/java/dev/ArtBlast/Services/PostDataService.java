@@ -20,7 +20,6 @@ public class PostDataService {
     }
     
     public Post findByIdAndUsername(Long id, String username){
-        System.out.println(postRepository);
         return postRepository.findByIdAndUsername(id, username);
     }
 

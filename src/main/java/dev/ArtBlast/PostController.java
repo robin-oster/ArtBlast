@@ -48,13 +48,12 @@ public class PostController {
         UriComponentsBuilder ucb, Principal principal){
         
         Post newPostWithUsername;
-        String imagePath;
 
         // upload image if post has media
         if(postRequest.getHasMedia() == true){
-            newPostWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), media_key, postRequest.getTextContent(), postRequest.getDateTime());
+            newPostWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), media_key, postRequest.getTextContent(), postRequest.getDateTime(), null);
         } else {
-            newPostWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), null, postRequest.getTextContent(), postRequest.getDateTime());
+            newPostWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), null, postRequest.getTextContent(), postRequest.getDateTime(), null);
         }
 
         Post savedPost = postDataService.save(newPostWithUsername);
@@ -65,6 +64,28 @@ public class PostController {
 
         return ResponseEntity.created(locationOfPost).build();
     }
+
+    @PostMapping("/{postId}/reply")
+    public ResponseEntity<Post> createNewReply(@PathVariable Long postId, @RequestBody Post postRequest, String media_key,
+        UriComponentsBuilder ucb, Principal principal){
+
+        Post newReplyWithUsername;
+
+        if(postRequest.getHasMedia() == true){
+            newReplyWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), media_key, postRequest.getTextContent(), postRequest.getDateTime(), postId);
+        } else {
+            newReplyWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), null, postRequest.getTextContent(), postRequest.getDateTime(), postId);
+        }
+
+        Post savedPost = postDataService.save(newReplyWithUsername);
+        URI locationOfPost = ucb
+            .path("/posts/{id}")
+            .buildAndExpand(savedPost.getId())
+            .toUri();
+
+        return ResponseEntity.created(locationOfPost).build();
+    }
+    
 
     @GetMapping("/{requestedId}")
     private ResponseEntity<Post> retrievePost(@PathVariable Long requestedId, Principal principal) {

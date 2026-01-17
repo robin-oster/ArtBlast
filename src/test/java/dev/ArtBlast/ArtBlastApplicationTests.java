@@ -22,6 +22,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Answers.*;
 
 import java.util.Date;
 import java.sql.Time;
@@ -73,10 +74,21 @@ class ArtBlastApplicationTests {
 	@DirtiesContext
 	void shouldCreateNewPost() throws ParseException{
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		Post post = new Post(null, "roster", true, "a", "a", timestamp);
+		Post post = new Post(null, "roster", true, "a", "a", timestamp, null);
 		ResponseEntity<Void> response = restTemplate
 			.withBasicAuth("roster", "abc123")
 			.postForEntity("/posts/createNew", post, Void.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+	}
+
+	@Test
+	@DirtiesContext
+	void shouldCreateNewReply() throws ParseException{
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		Post post = new Post(null, "roster", true, "a", "a", timestamp, null);
+		ResponseEntity<Void> response = restTemplate
+			.withBasicAuth("roster", "abc123")
+			.postForEntity("/posts/99/reply", post, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 	}
 
