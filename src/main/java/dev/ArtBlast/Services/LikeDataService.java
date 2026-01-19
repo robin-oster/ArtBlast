@@ -37,6 +37,14 @@ public class LikeDataService {
         return likesRepository.findByUser(user);
     }
 
+    public Boolean existsByUserAndPost(User user, Post post){
+        return likesRepository.existsByUserAndPost(user, post);
+    }
+
+    public Like findByUserAndPost(User user, Post post){
+        return likesRepository.findByUserAndPost(user, post);
+    }
+
     public Boolean existsById(Long id){
         return likesRepository.existsById(id);
     }

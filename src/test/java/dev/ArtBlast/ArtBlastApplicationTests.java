@@ -15,8 +15,11 @@ import org.springframework.web.client.RestTemplate;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
+import dev.ArtBlast.Entities.Like;
 import dev.ArtBlast.Entities.Post;
 import dev.ArtBlast.Entities.User;
+import dev.ArtBlast.Services.MyUserDetailsService;
+import dev.ArtBlast.Services.PostDataService;
 
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
@@ -37,6 +40,8 @@ class ArtBlastApplicationTests {
 	@Autowired
 	TestRestTemplate restTemplate;
 	PasswordEncoder passwordEncoder;
+	PostDataService postDataService;
+	MyUserDetailsService userDetailsService;
 
 	@Test
 	void shouldRetrieveAllPostsForUser(){
@@ -98,6 +103,20 @@ class ArtBlastApplicationTests {
 		User user = new User(null, "roster", "abc123", true, "a@b.com", "", "testing", "ROLE_USER");
 		ResponseEntity<Void> response = restTemplate
 			.postForEntity("/user/newUser", user, Void.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+	}
+
+	@Test
+	@DirtiesContext
+	void addNewLike(){
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		Post post = postDataService.findByIdAndUsername(99L, "roster");
+		User user = userDetailsService.findByUsername("roster");
+		Like like = new Like(null, post, user, timestamp);
+
+		ResponseEntity<Void> response = restTemplate
+			.withBasicAuth("roster", "abc123")
+			.postForEntity("/likes/addLike", like, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 	}
 

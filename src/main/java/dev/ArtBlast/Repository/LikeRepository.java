@@ -11,4 +11,6 @@ import dev.ArtBlast.Entities.User;
 public interface LikeRepository extends CrudRepository<Like, Long>{
     List<Like> findByPost(Post post);
     List<Like> findByUser(User user);
+    Like findByUserAndPost(User user, Post post);
+    Boolean existsByUserAndPost(User user, Post post);
 }

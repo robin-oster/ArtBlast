@@ -29,6 +29,11 @@ public class MyUserDetailsService implements UserDetailsService{
         return new MyUserPrincipal(user);
     }
 
+    public User findByUsername(String username){
+        User user = userRepository.findByUsername(username);
+        return user;
+    }
+
     public Long getId(String username){
         User user = userRepository.findByUsername(username);
         if(user == null){

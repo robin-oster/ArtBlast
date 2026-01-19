@@ -1,7 +1,8 @@
 package dev.ArtBlast.Entities;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,11 +24,11 @@ public class Like {
 
     public Like(){}
 
-    public Like(Long id, Post post, User user, Timestamp dateTime){
+    public Like(Long id, Post post, User user, Timestamp timestamp){
         this.id = id;
         this.post = post;
         this.user = user;
-        this.dateTime = dateTime;
+        this.dateTime = timestamp;
     }
 
     @Id

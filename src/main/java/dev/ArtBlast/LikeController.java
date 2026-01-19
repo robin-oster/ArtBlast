@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import dev.ArtBlast.Entities.Like;
+import dev.ArtBlast.Entities.Post;
+import dev.ArtBlast.Entities.User;
 import dev.ArtBlast.Services.LikeDataService;
+import dev.ArtBlast.Services.MyUserDetailsService;
+import dev.ArtBlast.Services.PostDataService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,10 +31,22 @@ public class LikeController {
 
     @Autowired
     private final LikeDataService likeDataService;
+    private final PostDataService postDataService;
+    private final MyUserDetailsService userDetailsService;
 
     @PostMapping("/addLike")
     public ResponseEntity<Like> addLike(@RequestBody Like like, UriComponentsBuilder ucb, Principal principal) {
-        Like likeToSave = new Like(null, like.getPost(), like.getUser(), like.getDateTime());
+        Post post = postDataService.findByIdAndUsername(like.getPost().getId(), like.getUser().getUsername());
+        User user = userDetailsService.findByUsername(like.getUser().getUsername());
+
+        //if like already exists, delete it
+        if(likeDataService.existsByUserAndPost(user, post)){
+            Like likeToDelete = likeDataService.findByUserAndPost(user, post);
+            deleteLike(likeToDelete.getId(), principal);
+            return ResponseEntity.noContent().build();
+        }
+
+        Like likeToSave = new Like(null, post, user, like.getDateTime());
         likeDataService.save(likeToSave);
 
         URI locationOfLike = ucb
