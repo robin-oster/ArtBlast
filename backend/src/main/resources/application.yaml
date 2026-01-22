@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: ArtBlast
+  h2:
+    console:
+      enabled: true
+  jpa:
+    defer-datasource-initialization: false
+    show-sql: true
+    properties:
+      hibernate:
+        ddl-auto: none
+        format-sql: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://aws-1-us-east-1.pooler.supabase.com:5432/postgres?user=postgres.nwwprbznjcpoatiuawqc&password=zu2F5Vl2CxQgB1hM
+    username: postgres.nwwprbznjcpoatiuawqc
+    password: zu2F5Vl2CxQgB1hM
+cloudflare:
+  r2:
+    endpoint:  https://68f15b145cc86f7231e007b0fc574e98.r2.cloudflarestorage.com
+    accessKey: 78758f72f790b5a6df3fea13e79fb345
+    secretKey: c4814f4cdcd7dc4011919656ebcc5e4c37f171d7042a4ed94b1ef78ea2f26eba
+    bucket:    artblast-images
+logging:
+  level:
+    org:
+      springframework:
+        security: INFO
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

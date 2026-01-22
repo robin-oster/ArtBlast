@@ -117,6 +117,12 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<sourceDirectory>backend/src/main/java</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>backend/src/main/resources</directory>
+			</resource>
+		</resources>
 	</build>
 
 </project>
