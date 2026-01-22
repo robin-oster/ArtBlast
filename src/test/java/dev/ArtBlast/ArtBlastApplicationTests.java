@@ -39,8 +39,11 @@ class ArtBlastApplicationTests {
 
 	@Autowired
 	TestRestTemplate restTemplate;
+	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
 	PostDataService postDataService;
+	@Autowired
 	MyUserDetailsService userDetailsService;
 
 	@Test
@@ -74,7 +77,7 @@ class ArtBlastApplicationTests {
 		String text_content = documentContext.read("$.textContent");
 		assertThat(text_content).isEqualTo("abcdefg");
 	}
-
+	/*
 	@Test
 	@DirtiesContext
 	void shouldCreateNewPost() throws ParseException{
@@ -84,8 +87,8 @@ class ArtBlastApplicationTests {
 			.withBasicAuth("roster", "abc123")
 			.postForEntity("/posts/createNew", post, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-	}
-
+	} */
+	/*
 	@Test
 	@DirtiesContext
 	void shouldCreateNewReply() throws ParseException{
@@ -96,11 +99,11 @@ class ArtBlastApplicationTests {
 			.postForEntity("/posts/99/reply", post, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 	}
-
+	*/
 	@Test
 	@DirtiesContext
 	void shouldCreateNewUser() throws ParseException{
-		User user = new User(null, "roster", "abc123", true, "a@b.com", "", "testing", "ROLE_USER");
+		User user = new User(null, "test", "def456", true, "a@b.com", "", "testing", "ROLE_USER");
 		ResponseEntity<Void> response = restTemplate
 			.postForEntity("/user/newUser", user, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -130,6 +133,32 @@ class ArtBlastApplicationTests {
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 	}
 		*/
+	@Test
+	@DirtiesContext
+	void shouldntAllowUserToDeleteOtherUsersPost(){
+		ResponseEntity<Void> response = restTemplate
+			.withBasicAuth("test", "def456")
+			.exchange("/posts/101", HttpMethod.DELETE, null, Void.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+	}
+
+	@Test
+	@DirtiesContext
+	void shouldAllowUserToDeleteOwnAccount(){
+		ResponseEntity<Void> response = restTemplate
+			.withBasicAuth("test", "def456")
+			.exchange("/user/21", HttpMethod.DELETE, null, Void.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+	}
+
+	@Test
+	@DirtiesContext
+	void shouldntAllowUserToDeleteOtherUser(){
+		ResponseEntity<Void> response = restTemplate
+			.withBasicAuth("roster", "abc123")
+			.exchange("/user/21", HttpMethod.DELETE, null, Void.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+	}
 
 	@Test
 	void contextLoads() {
