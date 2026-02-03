@@ -1,5 +1,6 @@
 package dev.ArtBlast.Entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,7 +24,8 @@ public class User {
 
     public User(){}
 
-    public User(Long id, String username, String password, Boolean enabled, String email, String avatar, String bio, String authority){
+    public User(Long id, String username, String password, Boolean enabled, String email, String avatar, 
+            String bio, String authority, Boolean trusted){
         this.id = id;
         this.username = username;
         this.password = password;
@@ -32,6 +34,7 @@ public class User {
         this.avatar = avatar;
         this.bio = bio;
         this.authority = authority;
+        this.trusted = trusted;
     }
 
     public User(User user){
@@ -43,6 +46,7 @@ public class User {
         this.avatar = user.getAvatar();
         this.bio = user.getBio();
         this.authority = user.getAuthority();
+        this.trusted = user.getTrusted();
     }
 
     @Id
@@ -70,4 +74,7 @@ public class User {
 
     @Column(name = "authority")
     private String authority;
+
+    @Column(name = "trusted")
+    private Boolean trusted;
 }

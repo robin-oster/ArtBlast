@@ -21,7 +21,8 @@ public class Post {
 
     public Post(){}
 
-    public Post(Long id, String username, Boolean hasMedia, String mediaLink, String textContent, Timestamp dateTime, Long parentId){
+    public Post(Long id, String username, Boolean hasMedia, String mediaLink, String textContent, Timestamp dateTime, 
+        Long parentId, Boolean pending, Long timesReported){
         this.id = id;
         this.username = username;
         this.hasMedia = hasMedia;
@@ -29,6 +30,8 @@ public class Post {
         this.textContent = textContent;
         this.dateTime = dateTime;
         this.parentId = parentId;
+        this.pending = pending;
+        this.timesReported = timesReported;
     }
 
     @Id
@@ -53,4 +56,10 @@ public class Post {
 
     @Column(name = "parent_id")
     private Long parentId;
+
+    @Column(name = "pending_approval")
+    private Boolean pending;
+
+    @Column(name = "times_reported")
+    private Long timesReported;
 }

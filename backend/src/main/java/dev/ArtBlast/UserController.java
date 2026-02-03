@@ -1,7 +1,9 @@
 package dev.ArtBlast;
 
+import java.lang.module.ResolutionException;
 import java.net.URI;
 import java.security.Principal;
+import java.util.ArrayList;
 
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,7 @@ public class UserController {
         MyUserPrincipal userDetails = userDetailsService.loadUserByUsername(username);
         if(userDetails != null && userDetails.isEnabled()){
             return ResponseEntity.ok(new User(userDetails.getId(), userDetails.getUsername(), null, true,
-            null, userDetails.getAvatar(), userDetails.getBio(), null));
+            null, userDetails.getAvatar(), userDetails.getBio(), null, null));
         }
         return ResponseEntity.notFound().build();
     }
@@ -62,8 +64,8 @@ public class UserController {
         
         String cryptPassword = passwordEncoder.encode(request.getPassword());
 
-        User newUser = new User(null, request.getUsername(), cryptPassword, request.getEnabled(), 
-            request.getEmail(), request.getAvatar(), request.getBio(), request.getAuthority());
+        User newUser = new User(null, request.getUsername(), cryptPassword, false, 
+            request.getEmail(), null, null, "ROLE_USER", false);
         
         
         try{
@@ -81,8 +83,10 @@ public class UserController {
         }
     }
 
+    // lets user update aspects of their account that they have control over
+    // (username, password, email, avatar, bio)
     @PutMapping("/{username}")
-    public ResponseEntity<Void> updateUser(@PathVariable String username, @RequestBody User userUpdate, Principal principal) {
+    public ResponseEntity<Void> updateUserDetails(@PathVariable String username, @RequestBody User userUpdate, Principal principal) {
         MyUserPrincipal userDetails = userDetailsService.loadUserByUsername(principal.getName());
         String updatedUsername = userDetails.getUsername();
         String updatedPassword = userDetails.getPassword();
@@ -99,11 +103,16 @@ public class UserController {
         if(userDetails != null && userUpdate.getId() == userDetails.getId()){
             //ensure id doesnt change
             User updatedUser = new User(userDetails.getId(), updatedUsername, updatedPassword, true, updatedEmail, updatedAvatar, 
-                updatedBio, userDetails.getAuthorities().toString());
+                updatedBio, userDetails.getAuthorities().toString(), userDetails.getTrusted());
             userDetailsService.save(updatedUser);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("follow/{id}")
+    public ResponseEntity<Void> followUser(@PathVariable Long id, @RequestBody User userToFollow, Principal principal) {
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

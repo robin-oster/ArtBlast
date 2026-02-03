@@ -1,8 +1,11 @@
 package dev.ArtBlast.Services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,8 +33,15 @@ public class MyUserDetailsService implements UserDetailsService{
     }
 
     public User findByUsername(String username){
-        User user = userRepository.findByUsername(username);
-        return user;
+        return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> findById(Long id){
+        return userRepository.findById(id);
+    }
+
+    public Page<User> findByTrusted(Boolean trusted, PageRequest pageRequest){
+        return userRepository.findByTrusted(trusted, pageRequest);
     }
 
     public Long getId(String username){

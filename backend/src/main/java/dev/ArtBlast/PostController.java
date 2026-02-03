@@ -30,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -51,9 +53,9 @@ public class PostController {
 
         // upload image if post has media
         if(postRequest.getHasMedia() == true){
-            newPostWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), media_key, postRequest.getTextContent(), postRequest.getDateTime(), null);
+            newPostWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), media_key, postRequest.getTextContent(), postRequest.getDateTime(), null, true, 0L);
         } else {
-            newPostWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), null, postRequest.getTextContent(), postRequest.getDateTime(), null);
+            newPostWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), null, postRequest.getTextContent(), postRequest.getDateTime(), null, true, 0L);
         }
 
         Post savedPost = postDataService.save(newPostWithUsername);
@@ -72,9 +74,11 @@ public class PostController {
         Post newReplyWithUsername;
 
         if(postRequest.getHasMedia() == true){
-            newReplyWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), media_key, postRequest.getTextContent(), postRequest.getDateTime(), postId);
+            newReplyWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), media_key, 
+            postRequest.getTextContent(), postRequest.getDateTime(), postId, true, 0L);
         } else {
-            newReplyWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), null, postRequest.getTextContent(), postRequest.getDateTime(), postId);
+            newReplyWithUsername = new Post(null, principal.getName(), postRequest.getHasMedia(), null, 
+            postRequest.getTextContent(), postRequest.getDateTime(), postId, true, 0L);
         }
 
         Post savedPost = postDataService.save(newReplyWithUsername);
@@ -85,7 +89,18 @@ public class PostController {
 
         return ResponseEntity.created(locationOfPost).build();
     }
-    
+
+        // can be called inside createNew to pass media_key in
+    @PostMapping("/uploadMedia")
+    private ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        String key = "k";
+        try{
+            key = mediaService.uploadFile(file);
+        } catch (FileUploadException e) {
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(key);
+    }
 
     @GetMapping("/{requestedId}")
     private ResponseEntity<Post> retrievePost(@PathVariable Long requestedId, Principal principal) {
@@ -108,6 +123,16 @@ public class PostController {
         return ResponseEntity.ok(page.getContent());
     }
 
+    @PutMapping("report/{id}")
+    public ResponseEntity<Void> reportPost(@PathVariable Long id, Principal principal) {
+        Post originalPost = postDataService.findById(id);
+        Post postToSave = new Post(id, originalPost.getUsername(), originalPost.getHasMedia(), originalPost.getMediaLink(),
+        originalPost.getTextContent(), originalPost.getDateTime(), originalPost.getParentId(), originalPost.getPending(),
+        originalPost.getTimesReported() + 1);
+        postDataService.save(postToSave);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{requestedId}")
     private ResponseEntity<Void> deletePost(@PathVariable Long requestedId, Principal principal){
         if(!postDataService.existsByIdAndUsername(requestedId, principal.getName())){
@@ -116,17 +141,4 @@ public class PostController {
         postDataService.deleteById(requestedId);
         return ResponseEntity.noContent().build();
     }
-
-    // can be called inside createNew to pass media_key in
-    @PostMapping("/uploadMedia")
-    private ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-        String key = "k";
-        try{
-            key = mediaService.uploadFile(file);
-        } catch (FileUploadException e) {
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(key);
-    }
-    
 }

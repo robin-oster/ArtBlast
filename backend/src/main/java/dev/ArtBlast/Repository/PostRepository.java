@@ -17,4 +17,6 @@ public interface PostRepository extends CrudRepository<Post, Long>,
         Post findByIdAndUsername(Long id, String username);
         Page<Post> findByUsername(String username, PageRequest pageRequest);
         Boolean existsByIdAndUsername(Long id, String username);
+        Page<Post> findTimesReportedLessThan(Long value, PageRequest pageRequest);
+        Page<Post> findByPending(Boolean pending, PageRequest pageRequest);
 }

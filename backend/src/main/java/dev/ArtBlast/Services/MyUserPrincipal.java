@@ -19,7 +19,7 @@ public class MyUserPrincipal implements UserDetails{
     public MyUserPrincipal(User user){
         this.user = user;
     }
-
+    
     public Long getId(){
         return user.getId();
     }
@@ -53,5 +53,9 @@ public class MyUserPrincipal implements UserDetails{
         updatedAuthorities.add(new SimpleGrantedAuthority(user.getAuthority()));
         Collection<SimpleGrantedAuthority> newAuthorities = updatedAuthorities;
         return newAuthorities;
+    }
+
+    public Boolean getTrusted(){
+        return user.getTrusted();
     }
 }

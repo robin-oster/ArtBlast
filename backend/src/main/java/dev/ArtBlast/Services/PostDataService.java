@@ -18,6 +18,13 @@ public class PostDataService {
     PostDataService(PostRepository postRepository){
         this.postRepository = postRepository;
     }
+
+    public Post findById(Long id){
+        if(postRepository.existsById(id)){
+            return postRepository.findById(id).get();
+        }
+        return null;
+    }
     
     public Post findByIdAndUsername(Long id, String username){
         return postRepository.findByIdAndUsername(id, username);
@@ -25,6 +32,14 @@ public class PostDataService {
 
     public Page<Post> findByUsername(String username, PageRequest pageRequest){
         return postRepository.findByUsername(username, pageRequest);
+    }
+
+    public Page<Post> findByPending(Boolean pending, PageRequest pageRequest){
+        return postRepository.findByPending(pending, pageRequest);
+    }
+
+    public Page<Post> findTimesReportedLessThan(Long value, PageRequest pageRequest){
+        return postRepository.findTimesReportedLessThan(value, pageRequest);
     }
 
     public Boolean existsById(Long id){
