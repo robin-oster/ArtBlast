@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import dev.ArtBlast.Entities.Like;
@@ -29,12 +31,12 @@ public class LikeDataService {
         return null;
     }
 
-    public List<Like> findByPost(Post post){
-        return likesRepository.findByPost(post);
+    public Page<Like> findByPost(Post post, PageRequest pageRequest){
+        return likesRepository.findByPost(post, pageRequest);
     }
 
-    public List<Like> findByUser(User user){
-        return likesRepository.findByUser(user);
+    public Page<Like> findByUser(User user, PageRequest pageRequest){
+        return likesRepository.findByUser(user, pageRequest);
     }
 
     public Boolean existsByUserAndPost(User user, Post post){

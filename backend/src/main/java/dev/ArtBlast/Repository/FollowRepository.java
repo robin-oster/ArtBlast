@@ -6,13 +6,14 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import dev.ArtBlast.Entities.Follow;
 import dev.ArtBlast.Entities.User;
-import java.util.List;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long>,
-    PagingAndSortingRepository<User, Long>{
+public interface FollowRepository extends CrudRepository<Follow, Long>,
+    PagingAndSortingRepository<Follow, Long>{
+    
+    Page<Follow> findByFollowingUser(User user, PageRequest pageRequest);
+    Page<Follow> findByFollowedUser(User user, PageRequest pageRequest);
 
-    User findByUsername(String username);
-    Page<User> findByTrusted(Boolean trusted, PageRequest pageRequest);
 }

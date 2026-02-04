@@ -1,4 +1,4 @@
-package dev.ArtBlast;
+package dev.ArtBlast.Controllers;
 
 import java.lang.module.ResolutionException;
 import java.net.URI;

@@ -15,8 +15,9 @@ public interface PostRepository extends CrudRepository<Post, Long>,
     PagingAndSortingRepository<Post, Long> {
 
         Post findByIdAndUsername(Long id, String username);
-        Page<Post> findByUsername(String username, PageRequest pageRequest);
+        Page<Post> findByUsernameOrderByDateTimeDesc(String username, PageRequest pageRequest);
+        Page<Post> findByUsernameAndTimesReportedLessThanOrderByDateTimeDesc(String username, Long value, PageRequest pageRequest);
         Boolean existsByIdAndUsername(Long id, String username);
         Page<Post> findTimesReportedLessThan(Long value, PageRequest pageRequest);
-        Page<Post> findByPending(Boolean pending, PageRequest pageRequest);
+        Page<Post> findByPendingOrderByDateTimeDesc(Boolean pending, PageRequest pageRequest);
 }

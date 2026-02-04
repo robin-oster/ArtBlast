@@ -1,4 +1,4 @@
-package dev.ArtBlast;
+package dev.ArtBlast.Controllers;
 
 import java.security.Principal;
 import java.util.List;

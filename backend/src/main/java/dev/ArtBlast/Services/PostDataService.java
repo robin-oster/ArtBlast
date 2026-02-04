@@ -31,11 +31,16 @@ public class PostDataService {
     }
 
     public Page<Post> findByUsername(String username, PageRequest pageRequest){
-        return postRepository.findByUsername(username, pageRequest);
+        return postRepository.findByUsernameOrderByDateTimeDesc(username, pageRequest);
+    }
+
+    public Page<Post> findByUsernameAndTimesReportedLessThan(String username, Long value, PageRequest pageRequest){
+        return postRepository.
+            findByUsernameAndTimesReportedLessThanOrderByDateTimeDesc(username, value, pageRequest);
     }
 
     public Page<Post> findByPending(Boolean pending, PageRequest pageRequest){
-        return postRepository.findByPending(pending, pageRequest);
+        return postRepository.findByPendingOrderByDateTimeDesc(pending, pageRequest);
     }
 
     public Page<Post> findTimesReportedLessThan(Long value, PageRequest pageRequest){

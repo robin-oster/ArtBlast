@@ -1,4 +1,4 @@
-package dev.ArtBlast;
+package dev.ArtBlast.Controllers;
 
 import java.net.URI;
 import java.security.Principal;
@@ -113,13 +113,13 @@ public class PostController {
         }
     }
 
-    @GetMapping("/user")
-    private ResponseEntity<List<Post>> retrieveAllUserPosts(Pageable pageable, Principal principal){
-        Page<Post> page = postDataService.findByUsername(principal.getName(),
+    @GetMapping("/user/{username}")
+    private ResponseEntity<List<Post>> retrieveAllUserPosts(@PathVariable String username, Pageable pageable, Principal principal){
+        Page<Post> page = postDataService.findByUsernameAndTimesReportedLessThan(username, 1L,
             PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
-                pageable.getSortOr(Sort.by(Sort.Direction.ASC, "dateTime"))));
+                pageable.getSortOr(Sort.by(Sort.Direction.DESC, "dateTime"))));
         return ResponseEntity.ok(page.getContent());
     }
 
